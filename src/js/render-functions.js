@@ -3,36 +3,46 @@ import "izitoast/dist/css/iziToast.min.css";
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
 
-export function renderImages(images) {
-  const gallery = document.querySelector('.gallery');
-  gallery.innerHTML = '';
+export const renderGallery = (images) => {
+  const galleryContainer = document.querySelector('.gallery');
+  galleryContainer.innerHTML = '';
 
-  images.forEach(image => {
-    const imageCard = `
-      <a href="${image.largeImageURL}" class="gallery-item">
-        <img src="${image.webformatURL}" alt="${image.tags}" />
+  if (images.length === 0) {
+    iziToast.error({
+      title: 'Sorry',
+      message: 'There are no images matching your search query. Please try again!',
+      position: 'top-center',
+    });
+    return;
+  }
+
+  images.forEach(({ webformatURL, largeImageURL, tags, likes, views, comments, downloads }) => {
+    const imgCard = document.createElement('div');
+    imgCard.classList.add('gallery-item');
+    imgCard.innerHTML = `
+      <a href="${largeImageURL}" class="gallery-link">
+        <img src="${webformatURL}" alt="${tags}" class="gallery-image"/>
+        <div class="info">
+          <p><b>Likes:</b> ${likes}</p>
+          <p><b>Views:</b> ${views}</p>
+          <p><b>Comments:</b> ${comments}</p>
+          <p><b>Downloads:</b> ${downloads}</p>
+        </div>
       </a>
     `;
-    gallery.insertAdjacentHTML('beforeend', imageCard);
+    galleryContainer.appendChild(imgCard);
   });
 
   const lightbox = new SimpleLightbox('.gallery a');
   lightbox.refresh();
-}
+};
 
-export function showError(message) {
-  iziToast.error({
-    title: 'Error',
-    message: message,
-  });
-}
+export const showLoadingIndicator = () => {
+  const loadingIndicator = document.querySelector('.loader');
+  loadingIndicator.style.display = 'block';
+};
 
-export function showLoading() {
-  const loader = document.querySelector('.loader');
-  loader.style.display = 'block';
-}
-
-export function hideLoading() {
-  const loader = document.querySelector('.loader');
-  loader.style.display = 'none';
-}
+export const hideLoadingIndicator = () => {
+  const loadingIndicator = document.querySelector('.loader');
+  loadingIndicator.style.display = 'none';
+};

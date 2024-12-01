@@ -1,26 +1,35 @@
 import { fetchImages } from './js/pixabay-api.js';
-import { renderImages, showError, showLoading, hideLoading } from './js/render-functions.js';
+import { renderGallery, showLoadingIndicator, hideLoadingIndicator } from './js/render-functions.js';
 
-const form = document.querySelector('.search-form');
-const input = document.querySelector('.search-input');
+const searchForm = document.querySelector('#search-form');
+const searchInput = document.querySelector('#search-input');
 
-form.addEventListener('submit', async (e) => {
-  e.preventDefault();
+searchForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
   
-  const query = input.value.trim();
-  
+  const query = searchInput.value.trim();
   if (query === '') {
-    showError('Please enter a search query.');
+    iziToast.error({
+      title: 'Error',
+      message: 'Please enter a search term.',
+      position: 'top-center',
+    });
     return;
   }
 
-  showLoading();
+  showLoadingIndicator();
+  
   try {
     const images = await fetchImages(query);
-    renderImages(images);
+    renderGallery(images);
   } catch (error) {
-    showError('Sorry, there are no images matching your search query. Please try again!');
+    iziToast.error({
+      title: 'Error',
+      message: 'An error occurred while fetching images.',
+      position: 'top-center',
+    });
   } finally {
-    hideLoading();
+    hideLoadingIndicator();
   }
+  searchInput.value = '';
 });

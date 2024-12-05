@@ -7,11 +7,11 @@ export const renderGallery = (images) => {
   const galleryContainer = document.querySelector('.gallery');
   galleryContainer.innerHTML = '';
 
-  if (images.length === 0) {
+  if (!Array.isArray(images) || images.length === 0) {
     iziToast.error({
       title: 'Sorry',
       message: 'There are no images matching your search query. Please try again!',
-      position: 'top-center',
+      position: 'topCenter',
     });
     return;
   }
@@ -39,10 +39,20 @@ export const renderGallery = (images) => {
 
 export const showLoadingIndicator = () => {
   const loadingIndicator = document.querySelector('.loader');
-  loadingIndicator.style.display = 'block';
+  if (loadingIndicator) {
+    loadingIndicator.style.display = 'block';
+  } else {
+    console.error('Loading indicator not found.');
+  }
 };
 
 export const hideLoadingIndicator = () => {
   const loadingIndicator = document.querySelector('.loader');
-  loadingIndicator.style.display = 'none';
+  if (loadingIndicator) {
+    setTimeout(() => {
+      loadingIndicator.style.display = 'none';
+    }, 500);
+  } else {
+    console.error('Loading indicator not found.');
+  }
 };

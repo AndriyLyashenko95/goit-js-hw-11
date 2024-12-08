@@ -16,7 +16,7 @@ export const fetchImages = async (query) => {
     const data = await response.json();
     return data.hits;
   } catch (error) {
-    alert(`Error: ${error.message}`);
+    // alert(`Error: ${error.message}`);
     console.error(error);
     throw error;
   } finally {

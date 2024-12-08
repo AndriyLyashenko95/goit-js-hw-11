@@ -19,14 +19,17 @@ searchForm.addEventListener('submit', async (event) => {
   event.preventDefault();
 
   const query = searchInput.value.trim();
-  
+
   if (query === '') {
     showError('Please enter a search term.');
     return;
   }
 
   showLoadingIndicator(); 
-  
+
+  const galleryContainer = document.querySelector('.gallery');
+  galleryContainer.innerHTML = ''; 
+
   try {
     const images = await fetchImages(query);
 
